@@ -45,31 +45,17 @@
                 <th>検索</th>
                 <th>履歴</th>
             </tr>
-            <tr v-for="idol in idols">
-                <td><a v-bind:href="idol.getProfileUrl()">{{ idol.id }}</a></td>
-                <td>{{ idol.name }}</td>
-                <td>{{ idol.cost }}</td>
-                <td>{{ idol.offense }}</td>
-                <td>{{ idol.defense }}</td>
-                <td>{{ idol.max_offense }}</td>
-                <td>{{ idol.max_defense }}</td>
-                <td>{{ idol.skill_name }}</td>
-                <td><a v-bind:href="idol.getTradeUrl()">Link</a></td>
-                <td><a v-bind:href="idol.getTradeHistoryUrl()">Link</a></td>
-                <td><a v-bind:href="idol.getWishUrl()">Link</a></td>
-                <td>
-                    <a v-bind:href="idol.getImageUrl()">通常</a>
-                    <a v-if="idol.isSR()" v-bind:href="idol.getNoFrameImageUrl()">枠無し</a>
-                    <a v-if="idol.isSR()" v-bind:href="idol.getSignBImageUrl()">サイン</a>
-                </td>
-            </tr>
+            <idol v-for="idol in idols" v-bind:data="idol" />
         </table>
     </section>
 </template>
 
 <script lang="ts">
-    import Idol from './idol.ts';
+    import idol from './components/idol.vue';
     export default {
+        components: {
+            'idol': idol
+        },
         data: function () {
             return {
                 type: "0",
@@ -96,14 +82,9 @@
                 }).then((response) => {
                     return response.json();
                 }).then((json) => {
-                    let idols: Idol[] = [];
-                    for (const key in json) {
-                        idols.push(new Idol(json[key]));
-                    }
-                    this.idols = idols;
+                    this.idols = json;
                 })
             }
-
         }
     };
 </script>
