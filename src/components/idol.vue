@@ -2,6 +2,7 @@
     <tr>
         <td><a v-bind:href="getProfileUrl()">{{ getId() }}</a></td>
         <td>{{ getName() }}</td>
+        <td>{{ getRarity() }}</td>
         <td>{{ getCost() }}</td>
         <td>{{ getOffense() }}</td>
         <td>{{ getDefense() }}</td>
@@ -39,6 +40,24 @@
             getName(): String {
                 return this.data.name;
             },
+            getRarity(): String {
+                switch (parseInt(this.data.rarity)) {
+                    case 0:
+                        return "N";
+                    case 1:
+                        return "N+";
+                    case 2:
+                        return "R";
+                    case 3:
+                        return "R+";
+                    case 4:
+                        return "SR";
+                    case 5:
+                        return "SR+";
+                    default:
+                        return "";
+                }
+            }
             getCost(): String {
                 return this.data.cost;
             },
@@ -97,7 +116,7 @@
                 return url;
             },
             isSR(): boolean {
-                return parseInt(this.rarity) >= 4;
+                return parseInt(this.data.rarity) >= 4;
             },
         }
     };
