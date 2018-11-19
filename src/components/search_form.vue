@@ -4,7 +4,7 @@
             <tr>
                 <th>名前</th>
                 <td>
-                    <input type="search" name="name" v-bind:value="name"/>
+                    <input type="search" name="name" v-bind:value="name" onblur="this.form.submit()" />
                 </td>
             </tr>
             <tr>
