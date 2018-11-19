@@ -2,6 +2,7 @@
     <tr>
         <td><a v-bind:href="getProfileUrl()">{{ getId() }}</a></td>
         <td>{{ getName() }}</td>
+        <td>{{ getType() }}</td>
         <td>{{ getRarity() }}</td>
         <td>{{ getCost() }}</td>
         <td>{{ getOffense() }}</td>
@@ -40,6 +41,18 @@
             getName(): String {
                 return this.data.name;
             },
+            getType(): String {
+                switch (parseInt(this.data.type)) {
+                    case 0:
+                        return "Cu";
+                    case 1:
+                        return "Co";
+                    case 2:
+                        return "Pa";
+                    default:
+                        return "";
+                }
+            }
             getRarity(): String {
                 switch (parseInt(this.data.rarity)) {
                     case 0:

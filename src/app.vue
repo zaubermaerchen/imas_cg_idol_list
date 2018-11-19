@@ -6,6 +6,7 @@
             <tr>
                 <th rowspan="2">ID</th>
                 <th rowspan="2">名前</th>
+                <th rowspan="2">タイプ</th>
                 <th rowspan="2">レアリティ</th>
                 <th rowspan="2">コスト</th>
                 <th colspan="2">初期値</th>
