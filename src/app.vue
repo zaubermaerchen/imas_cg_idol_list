@@ -52,7 +52,7 @@
         },
         mounted: function (): void {
             this.setParameters();
-            this.loadList();
+            this.search();
         },
         methods: {
             setParameters: function(): void {
@@ -70,23 +70,23 @@
                     this.limit = parameters.get("limit");
                 }
             },
-            loadList: function (offset: number = 0): void {
-                let data: FormData = new FormData();
-                data.append("name", this.name);
+            search: function (offset: number = 0): void {
+                const url = new URL("https://zaubermaerchen.info/imas_cg/api/idol/search/");
+                url.searchParams.append("name", this.name);
                 for(let i = 0; i < this.types.length; i++) {
-                    data.append("type", this.types[i]);
+                    url.searchParams.append("type", this.types[i]);
                 }
                 for(let i = 0; i < this.rarities.length; i++) {
-                    data.append("rarity", this.rarities[i]);
+                    url.searchParams.append("rarity", this.rarities[i]);
                 }
-                data.append("limit", this.limit);
-                data.append("offset", offset.toString());
-                fetch("https://zaubermaerchen.info/imas_cg/api/idol/list/", {
-                    method: "POST",
+                url.searchParams.append("limit", this.limit);
+                url.searchParams.append("offset", offset.toString());
+
+                fetch(url.href, {
+                    method: "GET",
                     headers: {
                         "Accept": "application/json",
                     },
-                    body: data,
                     mode: "cors",
                     credentials: "omit"
                 }).then((response) => {
@@ -97,7 +97,7 @@
                 })
             },
             changePage: function(offset: number): void {
-                this.loadList(offset);
+                this.search(offset);
             }
         }
     };
