@@ -52,7 +52,7 @@
                     default:
                         return "";
                 }
-            }
+            },
             getRarity(): String {
                 switch (parseInt(this.data.rarity)) {
                     case 0:
