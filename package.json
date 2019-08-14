@@ -17,6 +17,7 @@
     "vue-template-compiler": "^2.6.10"
   },
   "dependencies": {
+    "element-ui": "^2.10.1",
     "vue": "^2.6.10",
     "vue-hot-reload-api": "^2.3.3"
   }

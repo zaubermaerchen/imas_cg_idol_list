@@ -1,45 +1,84 @@
 <template>
     <section>
-        <searchform v-bind:name="name" v-bind:types="types" v-bind:rarities="rarities" v-bind:limit="limit"></searchform>
-        <pager v-bind:count="count" v-bind:limit="limit" @change="changePage"></pager>
-        <table id="idols">
-            <tr>
-                <th rowspan="2">ID</th>
-                <th rowspan="2">名前</th>
-                <th rowspan="2">タイプ</th>
-                <th rowspan="2">レアリティ</th>
-                <th rowspan="2">コスト</th>
-                <th colspan="2">初期値</th>
-                <th colspan="2">MAX</th>
-                <th rowspan="2">スキル名</th>
-                <th colspan="2">トレード</th>
-                <th rowspan="2">ホシイモノ<br />登録</th>
-                <th rowspan="2">カード画像</th>
-            </tr>
-            <tr>
-                <th>攻</th>
-                <th>守</th>
-                <th>攻</th>
-                <th>守</th>
-                <th>検索</th>
-                <th>履歴</th>
-            </tr>
-            <idol v-for="idol in idols" v-bind:data="idol"></idol>
-        </table>
+        <el-form ref="form" label-position="right" label-width="100px">
+            <el-form-item label="カード名">
+                <el-input v-model="name" name="name" placeholder="カード名" v-on:change="submit()"></el-input>
+            </el-form-item>
+            <el-form-item label="タイプ">
+                <el-checkbox-group v-model="types" v-on:change="submit()">
+                    <el-checkbox label="0">キュート</el-checkbox>
+                    <el-checkbox label="1">クール</el-checkbox>
+                    <el-checkbox label="2">パッション</el-checkbox>
+                </el-checkbox-group>
+                <input type="hidden" name="type" v-for="type in types" v-bind:value="type" />
+            </el-form-item>
+            <el-form-item label="レアリティ">
+                <el-checkbox-group v-model="rarities" v-on:change="submit()">
+                    <el-checkbox label="0">N</el-checkbox>
+                    <el-checkbox label="1">N+</el-checkbox>
+                    <el-checkbox label="2">R</el-checkbox>
+                    <el-checkbox label="3">R+</el-checkbox>
+                    <el-checkbox label="4">SR</el-checkbox>
+                    <el-checkbox label="5">SR+</el-checkbox>
+                </el-checkbox-group>
+                <input type="hidden" name="rarity" v-for="rarity in rarities" v-bind:value="rarity" />
+            </el-form-item>
+            <el-form-item label="件数">
+                <el-select v-model="limit" name="limit" v-on:change="submit()">
+                    <el-option value="25">25</el-option>
+                    <el-option value="50">50</el-option>
+                    <el-option value="100">100</el-option>
+                </el-select>
+            </el-form-item>
+        </el-form>
+
+        <el-pagination background layout="prev, pager, next" v-on:current-change="changePage" v-bind:total="count" v-bind:current-page.sync="page" v-bind:page-size="limit"></el-pagination>
+
+        <el-table v-bind:data="idols">
+            <el-table-column label="ID">
+                <template slot-scope="scope">
+                    <a v-bind:href="scope.row.profile_url">{{ scope.row.id }}</a>
+                </template>
+            </el-table-column>
+            <el-table-column prop="name" label="名前"></el-table-column>
+            <el-table-column prop="type_text" label="タイプ"></el-table-column>
+            <el-table-column prop="rarity_text" label="レアリティ"></el-table-column>
+            <el-table-column prop="cost" label="コスト"></el-table-column>
+            <el-table-column prop="offense" label="初期値攻"></el-table-column>
+            <el-table-column prop="defense" label="初期値守"></el-table-column>
+            <el-table-column prop="max_offense" label="MAX攻"></el-table-column>
+            <el-table-column prop="max_defense" label="MAX守"></el-table-column>
+            <el-table-column prop="skill_name" label="スキル名"></el-table-column>
+            <el-table-column label="トレード">
+                <template slot-scope="scope">
+                    <a v-bind:href="scope.row.trade_url">検索</a>
+                    <a v-bind:href="scope.row.trade_history_url">履歴</a>
+                </template>
+            </el-table-column>
+            <el-table-column label="ホシイモノ">
+                <template slot-scope="scope">
+                    <a v-bind:href="scope.row.wish_url" target="_blunk">登録</a>
+                </template>
+            </el-table-column>
+            <el-table-column label="カード画像">
+                <template slot-scope="scope">
+                    <a v-bind:href="scope.row.image_url">通常</a>
+                    <a v-if="scope.row.isSR()" v-bind:href="scope.row.no_frame_image_url">枠無し</a>
+                    <a v-if="scope.row.isSR()" v-bind:href="scope.row.sign_b_image_url">サイン</a>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-pagination background layout="prev, pager, next" v-on:current-change="changePage" v-bind:total="count" v-bind:current-page.sync="page" v-bind:page-size="limit"></el-pagination>
+
     </section>
 </template>
 
 <script lang="ts">
-    import searchform from './components/search_form.vue';
-    import idol from './components/idol.vue';
-    import pager from './components/pager.vue';
+    import Idol from './components/idol.ts';
+    import * as api from './components/api.ts';
 
     export default {
-        components: {
-            "searchform": searchform,
-            "idol": idol,
-            "pager": pager
-        },
         data: function () {
             return {
                 name: "",
@@ -47,6 +86,7 @@
                 rarities: [],
                 idols: [],
                 count: 0,
+                page: 1,
                 limit: 25,
             };
         },
@@ -58,7 +98,7 @@
             setParameters: function(): void {
                 const parameters: URLSearchParams = new URLSearchParams(window.location.search);
                 if(parameters.has("name")) {
-                    this.name = decodeURIComponent(parameters.get("name").replace(/\+/g, " ");
+                    this.name = decodeURIComponent(parameters.get("name").replace(/\+/g, " "));
                 }
                 if(parameters.has("type")) {
                     this.types = parameters.getAll("type");
@@ -67,37 +107,20 @@
                     this.rarities = parameters.getAll("rarity");
                 }
                 if(parameters.has("limit")) {
-                    this.limit = parameters.get("limit");
+                    this.limit = parseInt(parameters.get("limit"));
                 }
             },
             search: function (offset: number = 0): void {
-                const url = new URL("https://zaubermaerchen.info/imas_cg/api/idol/search/");
-                url.searchParams.append("name", this.name);
-                for(let i = 0; i < this.types.length; i++) {
-                    url.searchParams.append("type", this.types[i]);
-                }
-                for(let i = 0; i < this.rarities.length; i++) {
-                    url.searchParams.append("rarity", this.rarities[i]);
-                }
-                url.searchParams.append("limit", this.limit);
-                url.searchParams.append("offset", offset.toString());
-
-                fetch(url.href, {
-                    method: "GET",
-                    headers: {
-                        "Accept": "application/json",
-                    },
-                    mode: "cors",
-                    credentials: "omit"
-                }).then((response) => {
-                    return response.json();
-                }).then((json) => {
-                    this.idols = json.results;
+                api.searchCard(this.name, this.types, this.rarities, this.limit, offset).then((json: { [key: string]: any; }) => {
+                    this.idols = json.results.map((data: { [key: string]: string; }) => new Idol(data));
                     this.count = json.count;
                 })
             },
-            changePage: function(offset: number): void {
-                this.search(offset);
+            changePage: function(page: number): void {
+                this.search((page - 1) * this.limit);
+            },
+            submit: function(): void {
+                document.forms[0].submit();
             }
         }
     };
@@ -107,21 +130,12 @@
     body {
         font-size: 80%;
     }
-
-    table {
-        margin: 1em 0;
-        border-spacing: 1px;
+    .el-pagination {
+        display: flex;
+        justify-content: center;
     }
-    table#idols {
+    .el-table {
         width: 100%;
-    }
-    table#idols th {
-        color: #ffffff;
-        background-color: #000000;
-        padding: 2px 4px;
-    }
-    table#idols td {
-        background-color: #cccccc;
-        padding: 2px 4px;
+        margin-bottom: 1em;
     }
 </style>

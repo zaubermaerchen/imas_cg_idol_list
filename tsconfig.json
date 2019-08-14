@@ -9,6 +9,7 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "allowSyntheticDefaultImports": true,
+    "noImplicitThis": true,
   },
   "include": [
     "src/*.ts",
