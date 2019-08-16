@@ -82,14 +82,14 @@
         <el-pagination background layout="prev, pager, next" v-on:current-change="changePage" v-bind:total="count" v-bind:current-page.sync="page" v-bind:page-size="limit"></el-pagination>
  
         <el-dialog v-bind:visible.sync="visible_viewer">
-            <el-tabs type="border-card" v-if="idol">
-                <el-tab-pane label="通常">
+            <el-tabs v-model="active_viewer_tab" type="border-card" v-if="idol">
+                <el-tab-pane label="通常" name="normal">
                     <a v-bind:href="idol.image_url"><img class="card" v-bind:src="idol.image_url" /></a>
                 </el-tab-pane>
-                <el-tab-pane label="枠なし" v-if="idol.isSR()" >
+                <el-tab-pane label="枠なし" name="no_frame" v-if="idol.isSR()" >
                     <a v-bind:href="idol.no_frame_image_url"><img class="card" v-bind:src="idol.no_frame_image_url" /></a>
                 </el-tab-pane>
-                <el-tab-pane label="サイン" v-if="idol.isSR()" >
+                <el-tab-pane label="サイン" name="sign_b" v-if="idol.isSR()" >
                     <a v-bind:href="idol.sign_b_image_url"><img class="card" v-bind:src="idol.sign_b_image_url" /></a>
                 </el-tab-pane>
             </el-tabs>
@@ -113,6 +113,7 @@
                 page: 1,
                 limit: 25,
                 visible_viewer: false,
+                active_viewer_tab: 'normal',
                 idol: null,
             };
         },
@@ -157,6 +158,7 @@
             },
             showViewer: function(idol: Idol) {
                 this.idol = idol;
+                this.active_viewer_tab = 'normal';
                 this.visible_viewer = true;
             }
         }
@@ -184,7 +186,7 @@
         padding: 0;
     }
     img.card {
-        max-width: 50%;
+        max-width: 80%;
         background-color: black;
         object-fit: contain;
     }
