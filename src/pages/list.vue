@@ -35,39 +35,65 @@
         <el-table v-bind:data="idols">
             <el-table-column label="ID">
                 <template slot-scope="scope">
-                    <a v-bind:href="scope.row.profile_url">{{ scope.row.id }}</a>
+                    <el-link type="primary" v-bind:href="scope.row.profile_url">{{ scope.row.id }}</el-link>
                 </template>
             </el-table-column>
             <el-table-column prop="name" label="名前"></el-table-column>
             <el-table-column prop="type_text" label="タイプ"></el-table-column>
             <el-table-column prop="rarity_text" label="レアリティ"></el-table-column>
             <el-table-column prop="cost" label="コスト"></el-table-column>
-            <el-table-column prop="offense" label="初期値攻"></el-table-column>
-            <el-table-column prop="defense" label="初期値守"></el-table-column>
-            <el-table-column prop="max_offense" label="MAX攻"></el-table-column>
-            <el-table-column prop="max_defense" label="MAX守"></el-table-column>
+            <el-table-column label="攻">
+                <template slot-scope="scope">
+                    <ul>
+                        <li>{{ scope.row.offense }}</li>
+                        <li>({{ scope.row.max_offense }})</li>
+                    </ul>
+                </template>
+            </el-table-column>
+            <el-table-column label="守">
+                <template slot-scope="scope">
+                    <ul>
+                        <li>{{ scope.row.defense }}</li>
+                        <li>({{ scope.row.max_defense }})</li>
+                    </ul>
+                </template>
+            </el-table-column>
             <el-table-column prop="skill_name" label="スキル名"></el-table-column>
             <el-table-column label="トレード">
                 <template slot-scope="scope">
-                    <a v-bind:href="scope.row.trade_url">検索</a>
-                    <a v-bind:href="scope.row.trade_history_url">履歴</a>
+                    <ul>
+                        <li><el-link type="primary" v-bind:href="scope.row.trade_url">検索</el-link></li>
+                        <li><el-link type="primary" v-bind:href="scope.row.trade_history_url">履歴</el-link></li>
+                    </ul>
                 </template>
             </el-table-column>
             <el-table-column label="ホシイモノ">
                 <template slot-scope="scope">
-                    <a v-bind:href="scope.row.wish_url" target="_blunk">登録</a>
+                    <el-link type="primary" v-bind:href="scope.row.wish_url">登録</el-link>
                 </template>
             </el-table-column>
             <el-table-column label="カード画像">
                 <template slot-scope="scope">
-                    <a v-bind:href="scope.row.image_url">通常</a>
-                    <a v-if="scope.row.isSR()" v-bind:href="scope.row.no_frame_image_url">枠無し</a>
-                    <a v-if="scope.row.isSR()" v-bind:href="scope.row.sign_b_image_url">サイン</a>
+                    <el-button type="text" v-on:click="showViewer(scope.row)">表示</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
         <el-pagination background layout="prev, pager, next" v-on:current-change="changePage" v-bind:total="count" v-bind:current-page.sync="page" v-bind:page-size="limit"></el-pagination>
+ 
+        <el-dialog v-bind:visible.sync="visible_viewer" width="30%">
+            <el-tabs type="border-card" v-if="idol">
+                <el-tab-pane label="通常">
+                    <a v-bind:href="idol.image_url"><img class="card" v-bind:src="idol.image_url" /></a>
+                </el-tab-pane>
+                <el-tab-pane label="枠なし" v-if="idol.isSR()" >
+                    <a v-bind:href="idol.no_frame_image_url"><img class="card" v-bind:src="idol.no_frame_image_url" /></a>
+                </el-tab-pane>
+                <el-tab-pane label="サイン" v-if="idol.isSR()" >
+                    <a v-bind:href="idol.sign_b_image_url"><img class="card" v-bind:src="idol.sign_b_image_url" /></a>
+                </el-tab-pane>
+            </el-tabs>
+        </el-dialog>
 
     </section>
 </template>
@@ -86,6 +112,8 @@
                 count: 0,
                 page: 1,
                 limit: 25,
+                visible_viewer: false,
+                idol: null,
             };
         },
         mounted: function (): void {
@@ -127,6 +155,10 @@
                 this.page = page;
                 this.search((page - 1) * this.limit);
             },
+            showViewer: function(idol: Idol) {
+                this.idol = idol;
+                this.visible_viewer = true;
+            }
         }
     };
 </script>
@@ -142,5 +174,18 @@
     .el-table {
         width: 100%;
         margin-bottom: 1em;
+    }
+    .el-dialog__body {
+        text-align: center;
+    }
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    img.card {
+        max-width: 80%;
+        background-color: black;
+        object-fit: contain;
     }
 </style>
