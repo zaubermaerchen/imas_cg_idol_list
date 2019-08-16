@@ -81,7 +81,7 @@
 
         <el-pagination background layout="prev, pager, next" v-on:current-change="changePage" v-bind:total="count" v-bind:current-page.sync="page" v-bind:page-size="limit"></el-pagination>
  
-        <el-dialog v-bind:visible.sync="visible_viewer" width="30%">
+        <el-dialog v-bind:visible.sync="visible_viewer">
             <el-tabs type="border-card" v-if="idol">
                 <el-tab-pane label="通常">
                     <a v-bind:href="idol.image_url"><img class="card" v-bind:src="idol.image_url" /></a>
@@ -184,7 +184,6 @@
         padding: 0;
     }
     img.card {
-        max-width: 80%;
         background-color: black;
         object-fit: contain;
     }
