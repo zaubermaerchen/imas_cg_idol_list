@@ -184,6 +184,7 @@
         padding: 0;
     }
     img.card {
+        max-width: 50%;
         background-color: black;
         object-fit: contain;
     }
