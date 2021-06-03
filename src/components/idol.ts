@@ -73,7 +73,14 @@ export default class Idol {
         return Idol.getGameUrl("auction/history/" + this.hash);
     }
     public get wish_url(): string {
-        return Idol.getGameUrl("wish/regist/" + this.hash + "/0}");
+        return Idol.getGameUrl("wish/regist/" + this.hash + "/0/0/");
+    }
+    public get wish_premium_url(): string | null {
+        let url: string | null =  null;
+        if(this.isSR()) {
+            url = Idol.getGameUrl("wish/regist/" + this.hash + "/0/1/");
+        }
+        return url;
     }
     public get image_url(): string {
         return Idol.getBaseUrl("image_sp/card/l/" + this.hash + ".jpg");

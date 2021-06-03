@@ -67,9 +67,12 @@
                     </ul>
                 </template>
             </el-table-column>
-            <el-table-column label="ホシイモノ">
+            <el-table-column label="ホシイモノ登録">
                 <template slot-scope="scope">
-                    <el-link type="primary" v-bind:href="scope.row.wish_url">登録</el-link>
+                    <ul>
+                        <li><el-link type="primary" v-bind:href="scope.row.wish_url">通常</el-link></li>
+                        <li v-if="scope.row.isSR()"><el-link type="primary" v-bind:href="scope.row.wish_premium_url">プレミアムサイン</el-link></li>
+                    </ul>
                 </template>
             </el-table-column>
             <el-table-column label="カード画像">
