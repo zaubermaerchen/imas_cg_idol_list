@@ -25,7 +25,7 @@ export default class Idol {
         this.hash = data.hash;
     }
     private static getBaseUrl(path: string): string {
-        return "http://125.6.169.35/idolmaster/" + path;
+        return "http://mobamas.net/idolmaster/" + path;
     }
     private static getGameUrl(path: string): string {
         const url = Idol.getBaseUrl(path);

@@ -23,7 +23,7 @@
 
 <script lang="ts">
     function getBaseUrl(path: string): string {
-        return "http://125.6.169.35/idolmaster/" + path;
+        return "http://mobamas.net/idolmaster/" + path;
     }
     function getGameUrl(path: string): string {
         const url = getBaseUrl(path);
@@ -70,7 +70,7 @@
                     default:
                         return "";
                 }
-            }
+            },
             getCost(): String {
                 return this.data.cost;
             },
