@@ -3,7 +3,7 @@ import List from "./pages/list.vue";
 
 const routes = [
     {
-        path: '/',
+        path: '',
         component: List
     }
 ];
