@@ -34,7 +34,7 @@
 
         <el-table v-bind:data="idols">
             <el-table-column label="ID">
-                <template slot-scope="scope">
+                <template v-slot="scope">
                     <el-link type="primary" v-bind:href="scope.row.profile_url">{{ scope.row.id }}</el-link>
                 </template>
             </el-table-column>
@@ -42,49 +42,49 @@
             <el-table-column prop="type_text" label="タイプ"></el-table-column>
             <el-table-column prop="rarity_text" label="レアリティ"></el-table-column>
             <el-table-column prop="cost" label="コスト"></el-table-column>
-            <el-table-column label="攻">
-                <template slot-scope="scope">
-                    <ul>
-                        <li>{{ scope.row.offense }}</li>
-                        <li>({{ scope.row.max_offense }})</li>
-                    </ul>
-                </template>
-            </el-table-column>
-            <el-table-column label="守">
-                <template slot-scope="scope">
-                    <ul>
-                        <li>{{ scope.row.defense }}</li>
-                        <li>({{ scope.row.max_defense }})</li>
-                    </ul>
-                </template>
-            </el-table-column>
-            <el-table-column prop="skill_name" label="スキル名"></el-table-column>
-            <el-table-column label="トレード">
-                <template slot-scope="scope">
-                    <ul>
-                        <li><el-link type="primary" v-bind:href="scope.row.trade_url">検索</el-link></li>
-                        <li><el-link type="primary" v-bind:href="scope.row.trade_history_url">履歴</el-link></li>
-                    </ul>
-                </template>
-            </el-table-column>
-            <el-table-column label="ホシイモノ登録">
-                <template slot-scope="scope">
-                    <ul>
-                        <li><el-link type="primary" v-bind:href="scope.row.wish_url">通常</el-link></li>
-                        <li v-if="scope.row.isSR()"><el-link type="primary" v-bind:href="scope.row.wish_premium_url">プレミアムサイン</el-link></li>
-                    </ul>
-                </template>
-            </el-table-column>
-            <el-table-column label="カード画像">
-                <template slot-scope="scope">
-                    <el-button type="text" v-on:click="showViewer(scope.row)">表示</el-button>
-                </template>
-            </el-table-column>
+                <el-table-column label="攻">
+                    <template v-slot="scope">
+                        <ul>
+                            <li>{{ scope.row.offense }}</li>
+                            <li>({{ scope.row.max_offense }})</li>
+                        </ul>
+                    </template>
+                </el-table-column>
+                <el-table-column label="守">
+                    <template v-slot="scope">
+                        <ul>
+                            <li>{{ scope.row.defense }}</li>
+                            <li>({{ scope.row.max_defense }})</li>
+                        </ul>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="skill_name" label="スキル名"></el-table-column>
+                <el-table-column label="トレード">
+                    <template v-slot="scope">
+                        <ul>
+                            <li><el-link type="primary" v-bind:href="scope.row.trade_url">検索</el-link></li>
+                            <li><el-link type="primary" v-bind:href="scope.row.trade_history_url">履歴</el-link></li>
+                        </ul>
+                    </template>
+                </el-table-column>
+                <el-table-column label="ホシイモノ登録">
+                    <template v-slot="scope">
+                        <ul>
+                            <li><el-link type="primary" v-bind:href="scope.row.wish_url">通常</el-link></li>
+                            <li v-if="scope.row.isSR()"><el-link type="primary" v-bind:href="scope.row.wish_premium_url">プレミアムサイン</el-link></li>
+                        </ul>
+                    </template>
+                </el-table-column>
+                <el-table-column label="カード画像">
+                    <template v-slot="scope">
+                        <el-button type="text" v-on:click="showViewer(scope.row)">表示</el-button>
+                    </template>
+                </el-table-column>
         </el-table>
 
         <el-pagination background layout="prev, pager, next" v-on:current-change="changePage" v-bind:total="count" v-bind:current-page.sync="page" v-bind:page-size="limit"></el-pagination>
- 
-        <el-dialog v-bind:visible.sync="visible_viewer">
+
+        <el-dialog v-model="visible_viewer">
             <el-tabs v-model="active_viewer_tab" type="border-card" v-if="idol">
                 <el-tab-pane label="通常" name="normal">
                     <a v-bind:href="idol.image_url"><img class="card" v-bind:src="idol.image_url" /></a>
@@ -97,75 +97,93 @@
                 </el-tab-pane>
             </el-tabs>
         </el-dialog>
-
     </section>
 </template>
 
 <script lang="ts">
-    import Idol from '../components/idol.ts';
-    import * as api from '../components/api.ts';
+import { defineComponent, onMounted, ref, Ref } from "vue"
+import { useRoute, useRouter } from "vue-router"
+import Idol from '../components/idol';
+import * as api from '../components/api';
+import { IDatePickerType } from "element-plus/es/components/date-picker/src/date-picker.type";
 
-    export default {
-        data: function () {
-            return {
-                name: "",
-                types: [],
-                rarities: [],
-                idols: [],
-                count: 0,
-                page: 1,
-                limit: 25,
-                visible_viewer: false,
-                active_viewer_tab: 'normal',
-                idol: null,
-            };
-        },
-        mounted: function (): void {
-            this.setParameters();
-            this.search((this.page - 1) * this.limit);
-        },
-        methods: {
-            setParameters: function(): void {
-                const parameters: URLSearchParams = new URLSearchParams(window.location.search);
-                if(parameters.has("name")) {
-                    this.name = decodeURIComponent(parameters.get("name").replace(/\+/g, " "));
-                }
-                if(parameters.has("type")) {
-                    this.types = parameters.getAll("type");
-                }
-                if(parameters.has("rarity")) {
-                    this.rarities = parameters.getAll("rarity");
-                }
-                if(parameters.has("page")) {
-                    this.page = parseInt(parameters.get("page"));
-                }
-                if(parameters.has("limit")) {
-                    this.limit = parseInt(parameters.get("limit"));
-                }
-            },
-            search: function (offset: number = 0): void {
-                api.searchCard(this.name, this.types, this.rarities, this.limit, offset).then((json: { [key: string]: any; }) => {
-                    this.idols = json.results.map((data: { [key: string]: string; }) => new Idol(data));
-                    this.count = json.count;
-                    this.$router.replace({ query: {
-                        name: this.name, 
-                        type: this.types, 
-                        rarity: this.rarities,
-                        limit: this.limit.toString(),
-                    }});
-                })
-            },
-            changePage: function(page: number): void {
-                this.page = page;
-                this.search((page - 1) * this.limit);
-            },
-            showViewer: function(idol: Idol) {
-                this.idol = idol;
-                this.active_viewer_tab = 'normal';
-                this.visible_viewer = true;
+export default defineComponent({
+    name: "List",
+    setup: () => {
+        const router = useRouter();
+
+        const name = ref("");
+        const types: Ref<string[]> = ref([]);
+        const rarities: Ref<string[]> = ref([]);
+        const idols: Ref<Idol[]> = ref([]);
+        const count = ref(0);
+        const page = ref(1);
+        const limit = ref(25);
+        const visible_viewer = ref(false);
+        const active_viewer_tab = ref('normal');
+        const idol: Ref<Idol|null> = ref(null);
+
+        const setParameters = (): void => {
+            const parameters: URLSearchParams = new URLSearchParams(window.location.search);
+            if(parameters.has("name")) {
+                name.value = decodeURIComponent(parameters.get("name")?.replace(/\+/g, " ") ?? "");
             }
+            if(parameters.has("type")) {
+                types.value = parameters.getAll("type");
+            }
+            if(parameters.has("rarity")) {
+                rarities.value = parameters.getAll("rarity");
+            }
+            if(parameters.has("page")) {
+                page.value = parseInt(parameters.get("page") ?? "1");
+            }
+            if(parameters.has("limit")) {
+                limit.value = parseInt(parameters.get("limit") ?? "25");
+            }
+        };
+        const search = (offset: number = 0): void => {
+            api.searchCard(name.value, types.value.map((data) => parseInt(data)), rarities.value.map((data) => parseInt(data)), limit.value, offset).then((json: { [key: string]: any; }) => {
+                idols.value = json.results.map((data: { [key: string]: string; }) => new Idol(data));
+                count.value = parseInt(json.count);
+                router.replace({ query: {
+                    name: name.value, 
+                    type: types.value, 
+                    rarity: rarities.value,
+                    limit: limit.value.toString(),
+                }});
+            });
+        };
+        const changePage = (_page: number): void => {
+            page.value = _page;
+            search((page.value - 1) * limit.value);
+        };
+        const showViewer = (_idol: Idol): void => {
+            idol.value = _idol;
+            active_viewer_tab.value = 'normal';
+            visible_viewer.value = true;
+        };
+
+        onMounted((): void => {
+            setParameters();
+            search((page.value - 1) * limit.value);
+        });
+
+        return {
+            name,
+            types,
+            rarities,
+            idols,
+            count,
+            page,
+            limit,
+            visible_viewer,
+            active_viewer_tab,
+            idol,
+            changePage,
+            showViewer,
         }
-    };
+    }
+});
 </script>
 
 <style>
@@ -173,7 +191,7 @@
         font-size: 80%;
     }
     .el-pagination {
-        display: flex;
+        display: flex !important;
         justify-content: center;
     }
     .el-table {

@@ -3,16 +3,13 @@
 </template>
 
 <script lang="ts">
-    import Vue from "vue";
+import { defineComponent } from "vue"
 
-    export default Vue.extend({
-        name: "app",
-        data: function () {
-            return {
-            };
-        },
-
-    });
+export default defineComponent({
+    name: "app",
+    setup: () => {
+    },
+});
 </script>
 
 <style scoped>

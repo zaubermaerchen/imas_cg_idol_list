@@ -1,19 +1,25 @@
 {
   "compilerOptions": {
-    "strict": false,
+    "strict": true,
     "sourceMap": true,
-    "target": "es5",
-    "module": "es2015",
+    "target": "esnext",
+    "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "removeComments": true,
+    "resolveJsonModule": true,
     "preserveConstEnums": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitThis": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "types": ["element-plus/global"]
   },
   "include": [
-    "src/*.ts",
-    "src/*.vue"
+    "src/**/*.ts", 
+    "src/**/*.d.ts", 
+    "src/**/*.tsx", 
+    "src/**/*.vue"
   ],
   "exclude": [
     "node_modules"

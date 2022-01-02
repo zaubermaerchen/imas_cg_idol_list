@@ -75,8 +75,8 @@ export default class Idol {
     public get wish_url(): string {
         return Idol.getGameUrl("wish/regist/" + this.hash + "/0/0/");
     }
-    public get wish_premium_url(): string | null {
-        let url: string | null =  null;
+    public get wish_premium_url(): string | undefined {
+        let url: string | undefined =  undefined;
         if(this.isSR()) {
             url = Idol.getGameUrl("wish/regist/" + this.hash + "/0/1/");
         }
@@ -85,22 +85,22 @@ export default class Idol {
     public get image_url(): string {
         return Idol.getBaseUrl("image_sp/card/l/" + this.hash + ".jpg");
     }
-    public get no_frame_image_url(): string | null {
-        let url: string | null =  null;
+    public get no_frame_image_url(): string | undefined {
+        let url: string | undefined =  undefined;
         if(this.isSR()) {
             url = Idol.getBaseUrl("image_sp/card/l_noframe/" + this.hash + ".jpg");
         }
         return url;
     }
-    public get sign_b_image_url(): string | null {
-        let url: string | null =  null;
+    public get sign_b_image_url(): string | undefined {
+        let url: string | undefined =  undefined;
         if(this.isSR()) {
             url = Idol.getBaseUrl("image_sp/card_sign_b/l/" + this.hash + ".jpg");
         }
         return url;
     }
-    public get sign_p_image_url(): string | null {
-        let url: string | null =  null;
+    public get sign_p_image_url(): string | undefined {
+        let url: string | undefined =  undefined;
         if(this.isSR()) {
             url = Idol.getBaseUrl("image_sp/card_sign_p/l/" + this.hash + ".jpg");
         }
