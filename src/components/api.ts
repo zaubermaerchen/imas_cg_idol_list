@@ -1,4 +1,23 @@
-export function searchCard(name: string | null = null, types: number[] = [], rarities: number[] = [], limit: number | null = null, offset: number | null = null): Promise<any> {
+export interface SearchCardResult {
+    idol_id: number;
+    name: string;
+    type: number;
+    rarity: number;
+    cost: number;
+    offense: number;
+    defense: number;
+    max_offense: number;
+    max_defense: number;
+    skill_name: string;
+    hash: string;
+};
+
+export interface SearchCardResponse {
+    count: number;
+    results: SearchCardResult[];
+};
+
+export async function searchCard(name: string | null = null, types: number[] = [], rarities: number[] = [], limit: number | null = null, offset: number | null = null): Promise<SearchCardResponse> {
     const url = new URL("https://zaubermaerchen.info/imas_cg/api/idol/search/");
     if (name != null) {
         url.searchParams.append("name", name);
@@ -16,14 +35,14 @@ export function searchCard(name: string | null = null, types: number[] = [], rar
         url.searchParams.append("offset", offset.toString());
     }
 
-    return fetch(url.href, {
+    const response = await fetch(url.href, {
         method: "GET",
         headers: {
             "Accept": "application/json",
         },
         mode: "cors",
         credentials: "omit"
-    }).then((response: Response) => {
-        return response.json();
     });
+
+    return await response.json() as SearchCardResponse;
 }

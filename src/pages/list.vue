@@ -24,8 +24,6 @@
             <el-form-item label="件数">
                 <el-select v-model="limit" name="limit" v-on:change="changePage(1)">
                     <el-option value="25">25</el-option>
-                    <el-option value="50">50</el-option>
-                    <el-option value="100">100</el-option>
                 </el-select>
             </el-form-item>
         </el-form>
@@ -102,10 +100,11 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { useRouter } from "vue-router"
 import Idol from '../components/idol';
 import * as api from '../components/api';
-import { IDatePickerType } from "element-plus/es/components/date-picker/src/date-picker.type";
+
+const DEFAULT_LIMIT = 25;
 
 export default defineComponent({
     name: "List",
@@ -118,7 +117,7 @@ export default defineComponent({
         const idols: Ref<Idol[]> = ref([]);
         const count = ref(0);
         const page = ref(1);
-        const limit = ref(25);
+        const limit = ref(DEFAULT_LIMIT);
         const visible_viewer = ref(false);
         const active_viewer_tab = ref('normal');
         const idol: Ref<Idol|null> = ref(null);
@@ -138,13 +137,19 @@ export default defineComponent({
                 page.value = parseInt(parameters.get("page") ?? "1");
             }
             if(parameters.has("limit")) {
-                limit.value = parseInt(parameters.get("limit") ?? "25");
+                limit.value = parseInt(parameters.get("limit") ?? DEFAULT_LIMIT.toString());
             }
         };
         const search = (offset: number = 0): void => {
-            api.searchCard(name.value, types.value.map((data) => parseInt(data)), rarities.value.map((data) => parseInt(data)), limit.value, offset).then((json: { [key: string]: any; }) => {
-                idols.value = json.results.map((data: { [key: string]: string; }) => new Idol(data));
-                count.value = parseInt(json.count);
+            api.searchCard(
+                name.value, 
+                types.value.map((data) => parseInt(data)), 
+                rarities.value.map((data) => parseInt(data)), 
+                limit.value, 
+                offset
+            ).then((response) => {
+                idols.value = response.results.map((data) => new Idol(data));
+                count.value = response.count;
                 router.replace({ query: {
                     name: name.value, 
                     type: types.value, 

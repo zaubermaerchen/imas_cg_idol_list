@@ -1,3 +1,5 @@
+import { SearchCardResult } from '../components/api';
+
 export default class Idol {
     id: number;
     name: string;
@@ -11,16 +13,16 @@ export default class Idol {
     skill_name: string;
     hash: string;
 
-    public constructor(data: { [key: string]: string; }) {
-        this.id = parseInt(data.idol_id);
+    public constructor(data: SearchCardResult) {
+        this.id = data.idol_id;
         this.name = data.name;
-        this.type = parseInt(data.type);
-        this.rarity = parseInt(data.rarity);
-        this.cost = parseInt(data.cost);
-        this.offense = parseInt(data.offense);
-        this.defense = parseInt(data.defense);
-        this.max_offense = parseInt(data.max_offense);
-        this.max_defense = parseInt(data.max_defense);
+        this.type = data.type;
+        this.rarity = data.rarity;
+        this.cost = data.cost;
+        this.offense = data.offense;
+        this.defense = data.defense;
+        this.max_offense = data.max_offense;
+        this.max_defense = data.max_defense;
         this.skill_name = data.skill_name;
         this.hash = data.hash;
     }
