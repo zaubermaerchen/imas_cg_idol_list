@@ -100,7 +100,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from "vue"
-import { useRouter } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import Idol from '../components/idol';
 import * as api from '../components/api';
 
@@ -110,6 +110,7 @@ export default defineComponent({
     name: "List",
     setup: () => {
         const router = useRouter();
+        const route = useRoute();
 
         const name = ref("");
         const types: Ref<string[]> = ref([]);
@@ -150,12 +151,15 @@ export default defineComponent({
             ).then((response) => {
                 idols.value = response.results.map((data) => new Idol(data));
                 count.value = response.count;
-                router.replace({ query: {
-                    name: name.value, 
-                    type: types.value, 
-                    rarity: rarities.value,
-                    limit: limit.value.toString(),
-                }});
+                router.replace({
+                    path: route.path,
+                    query: {
+                        name: name.value, 
+                        type: types.value, 
+                        rarity: rarities.value,
+                        limit: limit.value.toString(),
+                    }
+                });
             });
         };
         const changePage = (_page: number): void => {
