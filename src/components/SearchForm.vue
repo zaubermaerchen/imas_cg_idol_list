@@ -5,7 +5,6 @@ interface Props {
   modelValue: SearchCondition
 }
 interface Emits {
-  (e: 'change'): void
   (e: 'update:modelValue', condition: SearchCondition): void
 }
 const props = defineProps<Props>();
@@ -43,6 +42,7 @@ const condition = computed({
       <el-select v-model="condition.limit" name="limit">
         <el-option value="10">10</el-option>
         <el-option value="25">25</el-option>
+        <el-option value="50">50</el-option>
       </el-select>
     </el-form-item>
   </el-form>
