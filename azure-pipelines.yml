@@ -12,6 +12,11 @@ steps:
     versionSpec: '16.x'
   displayName: 'Install Node.js'
 
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: '.env.production.local'
+  displayName: "Downloading .env.production.local"
+
 - script: |
     npm install
     npm run build
