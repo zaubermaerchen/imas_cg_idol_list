@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, reactive, computed, watch } from "vue"
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 import SearchForm from "@/components/SearchForm.vue"
 import PageContent from '@/components/PageContent.vue'
 import CardList from '@/components/CardList.vue'
@@ -12,6 +12,7 @@ import Idol from '@/classes/idol'
 const DEFAULT_LIMIT = 25;
 
 const router = useRouter();
+const route = useRoute();
 
 const condition = reactive<SearchCondition>({
   name: '',
@@ -48,7 +49,7 @@ const search = async () => {
   );
 
   router.replace({
-    name: 'index',
+    path: route.path,
     query: {
       name: condition.name,
       type: condition.types,
