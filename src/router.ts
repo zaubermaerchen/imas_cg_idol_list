@@ -1,16 +1,17 @@
-import { createRouter, createWebHistory } from "vue-router";
-import List from "./pages/list.vue";
+import { createRouter, createWebHistory } from 'vue-router'
+import Index from '@/pages/index.vue'
 
 const routes = [
-    {
-        path: "/:path(.*)",
-        component: List
-    }
+  {
+    name: 'index',
+    path: '/',
+    component: Index
+  }
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+  history: createWebHistory(),
+  routes,
 });
 
 export default router;
