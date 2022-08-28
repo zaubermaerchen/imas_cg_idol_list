@@ -3,8 +3,8 @@ import Index from '@/pages/index.vue'
 
 const routes = [
   {
-    name: 'index',
-    path: '/:path(.*)',
+    name: 'Index',
+    path: '/',
     component: Index
   }
 ];
