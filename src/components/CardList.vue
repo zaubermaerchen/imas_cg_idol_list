@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Idol from '@/classes/idol';
+import Idol from '@/classes/idol'
 
 interface Props {
   idols: Idol[]
@@ -8,11 +8,11 @@ interface Emits {
   (e: 'click', idol: Idol): string
 }
 
-defineProps<Props>();
-const emits = defineEmits<Emits>();
+defineProps<Props>()
+const emits = defineEmits<Emits>()
 
 const click = (idol: Idol) => {
-  emits('click', idol);
+  emits('click', idol)
 }
 </script>
 

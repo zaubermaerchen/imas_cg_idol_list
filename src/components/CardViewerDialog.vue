@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import Idol from '@/classes/idol';
+import Idol from '@/classes/idol'
 
 interface Props {
   modelValue: boolean
@@ -10,18 +10,18 @@ interface Emits {
   (e: 'update:modelValue', isVisible: boolean): string
 }
 
-const props = defineProps<Props>();
-const emits = defineEmits<Emits>();
+const props = defineProps<Props>()
+const emits = defineEmits<Emits>()
 
 const activeTab = ref('normal')
 const isVisible = computed({
   get: () => props.modelValue,
   set: (value) => emits('update:modelValue', value),
-});
+})
 
 watch(props, () => {
   activeTab.value = 'normal'
-});
+})
 </script>
 
 <template>

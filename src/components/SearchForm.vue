@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 interface Props {
   modelValue: SearchCondition
@@ -7,13 +7,13 @@ interface Props {
 interface Emits {
   (e: 'update:modelValue', condition: SearchCondition): void
 }
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 
 const condition = computed({
   get: () => props.modelValue,
   set: (value) => emits('update:modelValue', value),
-});
+})
 </script>
 
 <template>
