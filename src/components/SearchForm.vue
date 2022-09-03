@@ -39,7 +39,7 @@ const condition = computed({
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="件数">
-      <el-select v-model="condition.limit" name="limit">
+      <el-select v-model.number="condition.limit" name="limit">
         <el-option value="10">10</el-option>
         <el-option value="25">25</el-option>
         <el-option value="50">50</el-option>

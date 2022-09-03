@@ -9,7 +9,7 @@ import CardViewerDialog from '@/components/CardViewerDialog.vue'
 import { searchCard } from '@/functions/api'
 import Idol from '@/classes/idol'
 
-const DEFAULT_LIMIT = '25'
+const DEFAULT_LIMIT = 25
 
 const router = useRouter()
 
@@ -34,11 +34,11 @@ const setConditions = () => {
   condition.name = parameters.get('name') ?? ''
   condition.types = parameters.getAll("type")
   condition.rarities = parameters.getAll("rarity")
-  condition.limit = parameters.get("limit") ?? DEFAULT_LIMIT
+  condition.limit = parseInt(parameters.get("limit") ?? '') || DEFAULT_LIMIT
 }
 
 const search = async () => {
-  const limit = parseInt(condition.limit)
+  const limit = condition.limit
   const offset = (page.value - 1) * limit
   response.value = await searchCard(
     condition.name || undefined,
@@ -55,7 +55,7 @@ const search = async () => {
   query['type'] = condition.types
   query['rarity'] = condition.rarities
   if (condition.limit !== DEFAULT_LIMIT) {
-    query['limit'] = condition.limit
+    query['limit'] = condition.limit.toString()
   }
 
   router.replace({
@@ -85,7 +85,7 @@ watch(condition, () => {
 <template>
   <SearchForm v-model="condition" />
 
-  <PageContent v-model="page" :total="count" :page-size="parseInt(condition.limit)">
+  <PageContent v-model="page" :total="count" :page-size="condition.limit">
     <CardList :idols="idols" @click="showViewer" />
   </PageContent>
 
