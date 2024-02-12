@@ -88,25 +88,25 @@ export default class Idol {
     return Idol.getMobageUrl(gameUrl).href
   }
   public get imageUrl() {
-    return Idol.getGameUrl(`image_sp/card/l/${this.hash}.jpg`).href
+    return `https://zaubermaerchen.info/imas_cg/image/card/l/${this.hash}.jpg`
   }
   public get noFrameImageUrl() {
     if(!this.isSR()) {
       return undefined
     }
-    return Idol.getGameUrl(`image_sp/card/l_noframe/${this.hash}.jpg`).href
+    return `https://zaubermaerchen.info/imas_cg/image/card/l_noframe/${this.hash}.jpg`
   }
   public get signImageUrl() {
     if(!this.isSR()) {
       return undefined
     }
-    return Idol.getGameUrl(`image_sp/card_sign_b/l/${this.hash}.jpg`).href
+    return `https://zaubermaerchen.info/imas_cg/image/card_sign_b/l/${this.hash}.jpg`
   }
   public get premiumSignImageUrl() {
     if(!this.isSR()) {
       return undefined
     }
-    return Idol.getGameUrl(`image_sp/card_sign_p/l/${this.hash}.jpg`).href
+    return `https://zaubermaerchen.info/imas_cg/image/card_sign_p/l/${this.hash}.jpg`
   }
   public isSR(): boolean {
     return this.rarity >= 4
