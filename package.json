@@ -10,22 +10,25 @@
   },
   "author": "",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
-    "element-plus": "^2.2.15",
-    "vue": "^3.2.37",
-    "vue-router": "^4.1.5"
+    "@tsconfig/node20": "^20.1.2",
+    "element-plus": "^2.5.5",
+    "vue": "^3.4.18",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "@types/node": "^18.7.13",
-    "@typescript-eslint/eslint-plugin": "^5.33.0",
-    "@typescript-eslint/parser": "^5.33.0",
-    "@vitejs/plugin-vue": "^3.0.3",
-    "@vue/eslint-config-typescript": "^11.0.0",
-    "eslint": "^8.22.0",
-    "eslint-plugin-vue": "^9.4.0",
-    "typescript": "^4.6.4",
-    "vite": "^3.0.7",
-    "vite-tsconfig-paths": "^3.5.0",
-    "vue-tsc": "^0.39.5"
+    "@types/node": "^20.11.17",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/eslint-config-typescript": "^12.0.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-vue": "^9.21.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.1",
+    "vite-tsconfig-paths": "^4.3.1",
+    "vue-tsc": "^1.8.27"
   }
 }
