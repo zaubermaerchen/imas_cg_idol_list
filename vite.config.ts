@@ -1,16 +1,23 @@
-import { defineConfig, loadEnv, type UserConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import tsconfigPaths from 'vite-tsconfig-paths'
+import { fileURLToPath, URL } from 'node:url'
 
+import { defineConfig, loadEnv } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import vueDevTools from 'vite-plugin-vue-devtools';
 
-export default ({ mode }: UserConfig) => {
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => {
   process.env = {...process.env, ...loadEnv(mode ?? 'development', process.cwd())};
-  // https://vitejs.dev/config/
-  return defineConfig({
+
+  return {
     base: process.env.VITE_APP_BASE_PATH,
     plugins: [
       vue(),
-      tsconfigPaths(),
-    ]
-  })
-}
+      vueDevTools(),
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
+      },
+    }
+  };
+});
