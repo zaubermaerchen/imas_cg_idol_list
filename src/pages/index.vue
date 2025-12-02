@@ -1,7 +1,6 @@
-
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed, watch } from "vue"
-import { useRouter } from "vue-router"
+import { onMounted, ref, reactive, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import PageContent from '@/components/PageContent.vue'
 import CardList from '@/components/CardList.vue'
 import CardViewerDialog from '@/components/CardViewerDialog.vue'
@@ -27,13 +26,12 @@ const page = ref(1)
 const visibleViewer = ref(false)
 const idol = ref<Idol | null>(null)
 
-
 const setConditions = () => {
   const parameters: URLSearchParams = new URLSearchParams(window.location.search)
   condition.name = parameters.get('name') ?? ''
-  condition.types = parameters.getAll("type")
-  condition.rarities = parameters.getAll("rarity")
-  condition.limit = parseInt(parameters.get("limit") ?? '') || DEFAULT_LIMIT
+  condition.types = parameters.getAll('type')
+  condition.rarities = parameters.getAll('rarity')
+  condition.limit = parseInt(parameters.get('limit') ?? '') || DEFAULT_LIMIT
 }
 
 const search = async () => {
@@ -44,7 +42,7 @@ const search = async () => {
     condition.types.map((data) => parseInt(data)),
     condition.rarities.map((data) => parseInt(data)),
     limit,
-    offset
+    offset,
   )
 
   const query: Record<string, string | string[]> = {}
@@ -120,7 +118,7 @@ watch(condition, () => {
 </template>
 
 <style>
-  body {
-    font-size: 80%;
-  }
+body {
+  font-size: 80%;
+}
 </style>
