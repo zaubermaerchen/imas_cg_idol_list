@@ -5,7 +5,7 @@ import PageContent from '@/components/PageContent.vue'
 import CardList from '@/components/CardList.vue'
 import CardViewerDialog from '@/components/CardViewerDialog.vue'
 import { searchCard } from '@/functions/api'
-import Idol from '@/classes/idol'
+import Idol from '@/models/idol'
 
 const DEFAULT_LIMIT = 25
 

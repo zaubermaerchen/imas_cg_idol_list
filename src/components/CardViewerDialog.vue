@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import Idol from '@/classes/idol'
+import Idol from '@/models/idol'
 
 interface Props {
   modelValue: boolean
@@ -43,14 +43,13 @@ watch(props, () => {
   </el-dialog>
 </template>
 
-
 <style scoped>
-  .dialog-body {
-    text-align: center;
-  }
-  img.card {
-    max-width: 80%;
-    background-color: black;
-    object-fit: contain;
-  }
+.dialog-body {
+  text-align: center;
+}
+img.card {
+  max-width: 80%;
+  background-color: black;
+  object-fit: contain;
+}
 </style>

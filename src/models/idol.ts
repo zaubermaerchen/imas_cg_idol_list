@@ -25,7 +25,7 @@ export default class Idol {
     this.hash = data.hash
   }
   private static getGameUrl(path: string) {
-    return new URL(`${import.meta.env.VITE_GAME_SERVER_URL}${path}`)
+    return new URL(`${import.meta.env.VITE_GAME_SERVER_URL}/${path}`)
   }
   private static getMobageUrl(gameUrl: URL) {
     const mobageUrl = new URL(import.meta.env.VITE_MOBAGE_APP_URL)
@@ -35,33 +35,33 @@ export default class Idol {
 
   public get typeText(): string {
     switch (this.type) {
-    case 0:
-      return 'Cu'
-    case 1:
-      return 'Co'
-    case 2:
-      return 'Pa'
-    default:
-      return ''
+      case 0:
+        return 'Cu'
+      case 1:
+        return 'Co'
+      case 2:
+        return 'Pa'
+      default:
+        return ''
     }
   }
 
   public get rarityText(): string {
     switch (this.rarity) {
-    case 0:
-      return 'N'
-    case 1:
-      return 'N+'
-    case 2:
-      return 'R'
-    case 3:
-      return 'R+'
-    case 4:
-      return 'SR'
-    case 5:
-      return 'SR+'
-    default:
-      return ''
+      case 0:
+        return 'N'
+      case 1:
+        return 'N+'
+      case 2:
+        return 'R'
+      case 3:
+        return 'R+'
+      case 4:
+        return 'SR'
+      case 5:
+        return 'SR+'
+      default:
+        return ''
     }
   }
   public get profileUrl(): string {
@@ -81,32 +81,32 @@ export default class Idol {
     return Idol.getMobageUrl(gameUrl).href
   }
   public get wishPremiumSignUrl() {
-    if(!this.isSR()) {
+    if (!this.isSR()) {
       return undefined
     }
     const gameUrl = Idol.getGameUrl(`wish/regist/${this.hash}/0/1/`)
     return Idol.getMobageUrl(gameUrl).href
   }
   public get imageUrl() {
-    return `https://zaubermaerchen.info/imas_cg/image/card/l/${this.hash}.jpg`
+    return `${import.meta.env.VITE_IMAGE_SERVER_URL}/card/l/${this.hash}.jpg`
   }
   public get noFrameImageUrl() {
-    if(!this.isSR()) {
+    if (!this.isSR()) {
       return undefined
     }
-    return `https://zaubermaerchen.info/imas_cg/image/card/l_noframe/${this.hash}.jpg`
+    return `${import.meta.env.VITE_IMAGE_SERVER_URL}/card/l_noframe/${this.hash}.jpg`
   }
   public get signImageUrl() {
-    if(!this.isSR()) {
+    if (!this.isSR()) {
       return undefined
     }
-    return `https://zaubermaerchen.info/imas_cg/image/card_sign_b/l/${this.hash}.jpg`
+    return `${import.meta.env.VITE_IMAGE_SERVER_URL}/card_sign_b/l/${this.hash}.jpg`
   }
   public get premiumSignImageUrl() {
-    if(!this.isSR()) {
+    if (!this.isSR()) {
       return undefined
     }
-    return `https://zaubermaerchen.info/imas_cg/image/card_sign_p/l/${this.hash}.jpg`
+    return `${import.meta.env.VITE_IMAGE_SERVER_URL}/card_sign_p/l/${this.hash}.jpg`
   }
   public isSR(): boolean {
     return this.rarity >= 4

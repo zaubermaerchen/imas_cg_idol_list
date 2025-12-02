@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Idol from '@/classes/idol'
+import Idol from '@/models/idol'
 
 interface Props {
   idols: Idol[]
@@ -56,7 +56,9 @@ const click = (idol: Idol) => {
       <template #default="scope">
         <ul>
           <li><el-link type="primary" :href="scope.row.wishUrl">通常</el-link></li>
-          <li v-if="scope.row.isSR()"><el-link type="primary" :href="scope.row.wishPremiumSignUrl">プレミアムサイン</el-link></li>
+          <li v-if="scope.row.isSR()">
+            <el-link type="primary" :href="scope.row.wishPremiumSignUrl">プレミアムサイン</el-link>
+          </li>
         </ul>
       </template>
     </el-table-column>
@@ -69,12 +71,12 @@ const click = (idol: Idol) => {
 </template>
 
 <style scoped>
-  .el-table {
-    margin-bottom: 1em;
-  }
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+.el-table {
+  margin-bottom: 1em;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 </style>
