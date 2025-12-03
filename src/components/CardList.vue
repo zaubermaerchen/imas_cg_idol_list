@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import Idol from '@/models/idol'
+import Card from '@/models/card'
 
 interface Props {
-  idols: Idol[]
+  cardList: Card[]
 }
 interface Emits {
-  (e: 'click', idol: Idol): string
+  (e: 'click', card: Card): string
 }
 
 defineProps<Props>()
 const emits = defineEmits<Emits>()
 
-const click = (idol: Idol) => {
-  emits('click', idol)
+const click = (card: Card) => {
+  emits('click', card)
 }
 </script>
 
 <template>
-  <el-table :data="idols">
+  <el-table :data="cardList">
     <el-table-column label="ID">
       <template #default="scope">
         <el-link type="primary" :href="scope.row.profileUrl">{{ scope.row.id }}</el-link>

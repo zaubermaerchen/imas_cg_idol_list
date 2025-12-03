@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed, watch } from 'vue'
+import { onMounted, ref, reactive, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import PageContent from '@/components/PageContent.vue'
 import CardList from '@/components/CardList.vue'
 import CardViewerDialog from '@/components/CardViewerDialog.vue'
-import { searchCard } from '@/functions/api'
-import Idol from '@/models/idol'
+import Card from '@/models/card'
+import { CardRepositoryInjectKey } from '@/plugins/dependencyProviderPlugin.ts'
 
 const DEFAULT_LIMIT = 25
 
@@ -18,13 +18,12 @@ const condition = reactive<SearchCondition>({
   limit: DEFAULT_LIMIT,
 })
 
-const response = ref<Api.SearchCardResponse | null>(null)
-const idols = computed(() => response.value?.results.map((data) => new Idol(data)) ?? [])
-const count = computed(() => response.value?.count ?? 0)
+const cardList = ref<Card[]>([])
+const count = ref(0)
 const page = ref(1)
 
 const visibleViewer = ref(false)
-const idol = ref<Idol | null>(null)
+const selectedCard = ref<Card | null>(null)
 
 const setConditions = () => {
   const parameters: URLSearchParams = new URLSearchParams(window.location.search)
@@ -34,16 +33,19 @@ const setConditions = () => {
   condition.limit = parseInt(parameters.get('limit') ?? '') || DEFAULT_LIMIT
 }
 
+const cardRepository = inject(CardRepositoryInjectKey)!
 const search = async () => {
   const limit = condition.limit
   const offset = (page.value - 1) * limit
-  response.value = await searchCard(
-    condition.name || undefined,
+  const result = await cardRepository.search(
     condition.types.map((data) => parseInt(data)),
     condition.rarities.map((data) => parseInt(data)),
+    condition.name || undefined,
     limit,
     offset,
   )
+  cardList.value = result[0]
+  count.value = result[1]
 
   const query: Record<string, string | string[]> = {}
   if (condition.name) {
@@ -61,8 +63,8 @@ const search = async () => {
   })
 }
 
-const showViewer = (_idol: Idol): void => {
-  idol.value = _idol
+const showViewer = (card: Card): void => {
+  selectedCard.value = card
   visibleViewer.value = true
 }
 
@@ -111,10 +113,10 @@ watch(condition, () => {
   </el-form>
 
   <PageContent v-model="page" :total="count" :page-size="condition.limit">
-    <CardList :idols="idols" @click="showViewer" />
+    <CardList v-bind:card-list="cardList" @click="showViewer" />
   </PageContent>
 
-  <CardViewerDialog v-if="idol" v-model="visibleViewer" :idol="idol" />
+  <CardViewerDialog v-if="selectedCard" v-model="visibleViewer" v-bind:card="selectedCard" />
 </template>
 
 <style>

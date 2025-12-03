@@ -1,23 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import Idol from '@/models/idol'
+import { ref, watch } from 'vue'
+import Card from '@/models/card'
 
 interface Props {
-  modelValue: boolean
-  idol: Idol
+  card: Card
 }
-interface Emits {
-  (e: 'update:modelValue', isVisible: boolean): string
-}
-
+const isVisible = defineModel<boolean>({ required: true })
 const props = defineProps<Props>()
-const emits = defineEmits<Emits>()
 
 const activeTab = ref('normal')
-const isVisible = computed({
-  get: () => props.modelValue,
-  set: (value) => emits('update:modelValue', value),
-})
 
 watch(props, () => {
   activeTab.value = 'normal'
@@ -28,16 +19,16 @@ watch(props, () => {
   <el-dialog v-model="isVisible">
     <el-tabs v-model="activeTab" class="dialog-body" type="border-card">
       <el-tab-pane label="通常" name="normal">
-        <a :href="idol.imageUrl"><img class="card" :src="idol.imageUrl" /></a>
+        <a :href="card.imageUrl"><img class="card" :src="card.imageUrl" /></a>
       </el-tab-pane>
-      <el-tab-pane v-if="idol.isSR()" label="枠なし" name="no_frame">
-        <a :href="idol.noFrameImageUrl"><img class="card" :src="idol.noFrameImageUrl" /></a>
+      <el-tab-pane v-if="card.isSR()" label="枠なし" name="no_frame">
+        <a :href="card.noFrameImageUrl"><img class="card" :src="card.noFrameImageUrl" /></a>
       </el-tab-pane>
-      <el-tab-pane v-if="idol.isSR()" label="サイン" name="sign_b">
-        <a :href="idol.signImageUrl"><img class="card" :src="idol.signImageUrl" /></a>
+      <el-tab-pane v-if="card.isSR()" label="サイン" name="sign_b">
+        <a :href="card.signImageUrl"><img class="card" :src="card.signImageUrl" /></a>
       </el-tab-pane>
-      <el-tab-pane v-if="idol.isSR()" label="プレミアムサイン" name="sign_p">
-        <a :href="idol.premiumSignImageUrl"><img class="card" :src="idol.premiumSignImageUrl" /></a>
+      <el-tab-pane v-if="card.isSR()" label="プレミアムサイン" name="sign_p">
+        <a :href="card.premiumSignImageUrl"><img class="card" :src="card.premiumSignImageUrl" /></a>
       </el-tab-pane>
     </el-tabs>
   </el-dialog>

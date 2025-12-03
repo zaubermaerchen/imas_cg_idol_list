@@ -1,4 +1,4 @@
-export default class Idol {
+export default class Card {
   id: number
   name: string
   type: number
@@ -11,19 +11,32 @@ export default class Idol {
   skillName: string
   hash: string
 
-  public constructor(data: Api.Card) {
-    this.id = data.idol_id
-    this.name = data.name
-    this.type = data.type
-    this.rarity = data.rarity
-    this.cost = data.cost
-    this.offense = data.offense
-    this.defense = data.defense
-    this.maxOffense = data.max_offense
-    this.maxDefense = data.max_defense
-    this.skillName = data.skill_name
-    this.hash = data.hash
+  public constructor(
+    id: number,
+    name: string,
+    type: number,
+    rarity: number,
+    cost: number,
+    offense: number,
+    defense: number,
+    maxOffense: number,
+    maxDefense: number,
+    skillName: string,
+    hash: string,
+  ) {
+    this.id = id
+    this.name = name
+    this.type = type
+    this.rarity = rarity
+    this.cost = cost
+    this.offense = offense
+    this.defense = defense
+    this.maxOffense = maxOffense
+    this.maxDefense = maxDefense
+    this.skillName = skillName
+    this.hash = hash
   }
+
   private static getGameUrl(path: string) {
     return new URL(`${import.meta.env.VITE_GAME_SERVER_URL}/${path}`)
   }
@@ -65,27 +78,27 @@ export default class Idol {
     }
   }
   public get profileUrl(): string {
-    const gameUrl = Idol.getGameUrl(`archive/view/${this.hash}`)
-    return Idol.getMobageUrl(gameUrl).href
+    const gameUrl = Card.getGameUrl(`archive/view/${this.hash}`)
+    return Card.getMobageUrl(gameUrl).href
   }
   public get tradeUrl(): string {
-    const gameUrl = Idol.getGameUrl(`auction/search_top/0/${this.hash}`)
-    return Idol.getMobageUrl(gameUrl).href
+    const gameUrl = Card.getGameUrl(`auction/search_top/0/${this.hash}`)
+    return Card.getMobageUrl(gameUrl).href
   }
   public get tradeHistoryUrl(): string {
-    const gameUrl = Idol.getGameUrl(`auction/history/${this.hash}`)
-    return Idol.getMobageUrl(gameUrl).href
+    const gameUrl = Card.getGameUrl(`auction/history/${this.hash}`)
+    return Card.getMobageUrl(gameUrl).href
   }
   public get wishUrl(): string {
-    const gameUrl = Idol.getGameUrl(`wish/regist/${this.hash}/0/0/`)
-    return Idol.getMobageUrl(gameUrl).href
+    const gameUrl = Card.getGameUrl(`wish/regist/${this.hash}/0/0/`)
+    return Card.getMobageUrl(gameUrl).href
   }
   public get wishPremiumSignUrl() {
     if (!this.isSR()) {
       return undefined
     }
-    const gameUrl = Idol.getGameUrl(`wish/regist/${this.hash}/0/1/`)
-    return Idol.getMobageUrl(gameUrl).href
+    const gameUrl = Card.getGameUrl(`wish/regist/${this.hash}/0/1/`)
+    return Card.getMobageUrl(gameUrl).href
   }
   public get imageUrl() {
     return `${import.meta.env.VITE_IMAGE_SERVER_URL}/card/l/${this.hash}.jpg`
