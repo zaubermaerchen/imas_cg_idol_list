@@ -1,11 +1,20 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 interface Props {
   total: number
   pageSize: number
 }
 
-const currentPage = defineModel<number>({ required: true })
-defineProps<Props>()
+const offset = defineModel<number>({ required: true })
+const props = defineProps<Props>()
+
+const currentPage = computed({
+  get: () => Math.floor(offset.value / props.pageSize) + 1,
+  set: (value: number) => {
+    offset.value = (value - 1) * props.pageSize
+  },
+})
 </script>
 
 <template>

@@ -1,100 +1,80 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, watch, inject } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, watch, inject } from 'vue'
+import { useRouter, type LocationQuery } from 'vue-router'
 import PageContent from '@/components/PageContent.vue'
 import CardList from '@/components/CardList.vue'
 import CardViewerDialog from '@/components/CardViewerDialog.vue'
 import Card from '@/models/card'
+import { useFilteredCardList, DEFAULT_LIMIT } from '@/composables/filteredCardList'
 import { CardRepositoryInjectKey } from '@/plugins/dependencyProviderPlugin.ts'
 
-const DEFAULT_LIMIT = 25
+const cardRepository = inject(CardRepositoryInjectKey)!
+const { typeList, rarityList, name, cardList, total, offset, limit } = useFilteredCardList(
+  cardRepository,
+  new URLSearchParams(window.location.search),
+)
 
-const router = useRouter()
-
-const condition = reactive<SearchCondition>({
-  name: '',
-  types: [],
-  rarities: [],
-  limit: DEFAULT_LIMIT,
+const displayedTypeList = computed({
+  get: () => typeList.value.map((v) => String(v)),
+  set: (value: string[]) => {
+    typeList.value = value.map((v) => Number(v))
+  },
 })
 
-const cardList = ref<Card[]>([])
-const count = ref(0)
-const page = ref(1)
+const displayedRarityList = computed({
+  get: () => rarityList.value.map((v) => String(v)),
+  set: (value: string[]) => {
+    rarityList.value = value.map((v) => Number(v))
+  },
+})
 
-const visibleViewer = ref(false)
-const selectedCard = ref<Card | null>(null)
+const displayedName = computed({
+  get: () => name.value ?? '',
+  set: (value: string) => {
+    name.value = value.trim().length > 0 ? value : undefined
+  },
+})
 
-const setConditions = () => {
-  const parameters: URLSearchParams = new URLSearchParams(window.location.search)
-  condition.name = parameters.get('name') ?? ''
-  condition.types = parameters.getAll('type')
-  condition.rarities = parameters.getAll('rarity')
-  condition.limit = parseInt(parameters.get('limit') ?? '') || DEFAULT_LIMIT
-}
-
-const cardRepository = inject(CardRepositoryInjectKey)!
-const search = async () => {
-  const limit = condition.limit
-  const offset = (page.value - 1) * limit
-  const result = await cardRepository.search(
-    condition.types.map((data) => parseInt(data)),
-    condition.rarities.map((data) => parseInt(data)),
-    condition.name || undefined,
-    limit,
-    offset,
-  )
-  cardList.value = result[0]
-  count.value = result[1]
-
-  const query: Record<string, string | string[]> = {}
-  if (condition.name) {
-    query['name'] = condition.name
+const router = useRouter()
+watch([typeList, rarityList, name, limit], async () => {
+  const query: LocationQuery = {}
+  if (name.value) {
+    query['name'] = name.value
   }
-  query['type'] = condition.types
-  query['rarity'] = condition.rarities
-  if (condition.limit !== DEFAULT_LIMIT) {
-    query['limit'] = condition.limit.toString()
+  query['type'] = typeList.value.map((v) => v.toString())
+  query['rarity'] = rarityList.value.map((v) => v.toString())
+  if (limit.value !== DEFAULT_LIMIT) {
+    query['limit'] = limit.value.toString()
   }
 
   router.replace({
     name: 'Index',
     query: query,
   })
-}
+})
 
+const isVisibleViewer = ref(false)
+const selectedCard = ref<Card | null>(null)
 const showViewer = (card: Card): void => {
   selectedCard.value = card
-  visibleViewer.value = true
+  isVisibleViewer.value = true
 }
-
-onMounted((): void => {
-  setConditions()
-})
-
-let stopPageWatch = watch(page, () => void search())
-watch(condition, () => {
-  stopPageWatch()
-  page.value = 1
-  stopPageWatch = watch(page, () => void search())
-  search()
-})
 </script>
 
 <template>
   <el-form ref="form" label-position="right" label-width="100px">
     <el-form-item label="カード名">
-      <el-input v-model="condition.name" name="name" placeholder="カード名" />
+      <el-input v-model="displayedName" name="name" placeholder="カード名" />
     </el-form-item>
     <el-form-item label="タイプ">
-      <el-checkbox-group v-model="condition.types">
+      <el-checkbox-group v-model="displayedTypeList">
         <el-checkbox label="0">キュート</el-checkbox>
         <el-checkbox label="1">クール</el-checkbox>
         <el-checkbox label="2">パッション</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="レアリティ">
-      <el-checkbox-group v-model="condition.rarities">
+      <el-checkbox-group v-model="displayedRarityList">
         <el-checkbox label="0">N</el-checkbox>
         <el-checkbox label="1">N+</el-checkbox>
         <el-checkbox label="2">R</el-checkbox>
@@ -104,7 +84,7 @@ watch(condition, () => {
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="件数">
-      <el-select v-model.number="condition.limit" name="limit">
+      <el-select v-model.number="limit" name="limit">
         <el-option value="10">10</el-option>
         <el-option value="25">25</el-option>
         <el-option value="50">50</el-option>
@@ -112,11 +92,11 @@ watch(condition, () => {
     </el-form-item>
   </el-form>
 
-  <PageContent v-model="page" :total="count" :page-size="condition.limit">
+  <PageContent v-model="offset" :total="total" :page-size="limit">
     <CardList v-bind:card-list="cardList" @click="showViewer" />
   </PageContent>
 
-  <CardViewerDialog v-if="selectedCard" v-model="visibleViewer" v-bind:card="selectedCard" />
+  <CardViewerDialog v-if="selectedCard" v-model="isVisibleViewer" v-bind:card="selectedCard" />
 </template>
 
 <style>
