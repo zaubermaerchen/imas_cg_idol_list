@@ -18,28 +18,28 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "element-plus": "^2.11.3",
-    "vue": "^3.5.21",
-    "vue-router": "^4.5.1"
+    "element-plus": "^2.14.6",
+    "vue": "^3.5.43",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "@prettier/plugin-oxc": "^0.1.2",
-    "@tsconfig/node24": "^24.0.1",
-    "@types/node": "^24.5.2",
-    "@vitejs/plugin-vue": "^6.0.7",
+    "@prettier/plugin-oxc": "^0.1.4",
+    "@tsconfig/node24": "^24.0.5",
+    "@types/node": "^24.13.6",
+    "@vitejs/plugin-vue": "^6.0.9",
     "@vue/eslint-config-prettier": "^10.2.0",
-    "@vue/eslint-config-typescript": "^14.6.0",
+    "@vue/eslint-config-typescript": "^14.9.0",
     "@vue/tsconfig": "^0.8.1",
-    "eslint": "^9.36.0",
-    "eslint-plugin-oxlint": "^1.31.0",
-    "eslint-plugin-vue": "^10.6.2",
-    "jiti": "^2.6.1",
+    "eslint": "^9.39.5",
+    "eslint-plugin-oxlint": "^1.83.0",
+    "eslint-plugin-vue": "^10.11.0",
+    "jiti": "^2.7.0",
     "npm-run-all2": "^8.0.4",
-    "oxlint": "^1.31.0",
-    "prettier": "^3.7.3",
-    "typescript": "^5.9.2",
-    "vite": "^8.0.16",
-    "vite-plugin-vue-devtools": "^8.1.2",
-    "vue-tsc": "^3.0.7"
+    "oxlint": "^1.83.0",
+    "prettier": "^3.9.8",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.0",
+    "vite-plugin-vue-devtools": "^8.2.1",
+    "vue-tsc": "^3.3.11"
   }
 }
