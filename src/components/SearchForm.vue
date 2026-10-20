@@ -35,19 +35,19 @@ const displayedName = computed({
     </el-form-item>
     <el-form-item label="タイプ">
       <el-checkbox-group v-model="displayedTypeList">
-        <el-checkbox label="0">キュート</el-checkbox>
-        <el-checkbox label="1">クール</el-checkbox>
-        <el-checkbox label="2">パッション</el-checkbox>
+        <el-checkbox value="0" label="キュート" />
+        <el-checkbox value="1" label="クール" />
+        <el-checkbox value="2" label="パッション" />
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="レアリティ">
       <el-checkbox-group v-model="displayedRarityList">
-        <el-checkbox label="0">N</el-checkbox>
-        <el-checkbox label="1">N+</el-checkbox>
-        <el-checkbox label="2">R</el-checkbox>
-        <el-checkbox label="3">R+</el-checkbox>
-        <el-checkbox label="4">SR</el-checkbox>
-        <el-checkbox label="5">SR+</el-checkbox>
+        <el-checkbox value="0" label="N" />
+        <el-checkbox value="1" label="N+" />
+        <el-checkbox value="2" label="R" />
+        <el-checkbox value="3" label="R+" />
+        <el-checkbox value="4" label="SR" />
+        <el-checkbox value="5" label="SR+" />
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="件数">
